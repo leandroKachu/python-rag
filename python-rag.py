@@ -11,6 +11,8 @@ Ele permite transferências 24 horas por dia, 7 dias por semana.
 As transações são concluídas em poucos segundos.
 O Pix pode ser usado por pessoas físicas e empresas.
 """
+chunks =[]
+model = SentenceTransformer("all-MiniLM-L6-v2")
 
 def animated_print(msg, width=60, delay=0.01):
     for i  in range(1, width + 1):
@@ -26,8 +28,12 @@ def animated_print(msg, width=60, delay=0.01):
 # 2. CHUNKING
 # =========================
 
+def read_text(path):
+    with open(path) as f:
+        return f.read()
+    
+
 def chunk_text(text, chunk_size=120):
-    chunks =[]
     start = 0
     
     while start < len(text):
@@ -36,50 +42,53 @@ def chunk_text(text, chunk_size=120):
         if chunk:
             chunks.append(chunk)
         start = end
-    return chunks
 
+def create_embeddings(chunks):
+    animated_print("CHUNKS")
 
-chunks = chunk_text(document)
+    for i, chunk in enumerate(chunks):
+        animated_print(f"[{i}] {chunk}")
 
-animated_print("CHUNKS")
+    # =========================
+    # 3. EMBEDDINGS
+    # =========================
+    model = SentenceTransformer("all-MiniLM-L6-v2")
+    embeddings = model.encode(chunks)
 
-for i, chunk in enumerate(chunks):
-    animated_print(f"[{i}] {chunk}")
-
-# =========================
-# 3. EMBEDDINGS
-# =========================
-model = SentenceTransformer("all-MiniLM-L6-v2")
-embeddings = model.encode(chunks)
-
-animated_print(f"\n Dimensions of embeddings: {embeddings.shape}")
+    animated_print(f"\n Dimensions of embeddings: {embeddings.shape}")
+    return embeddings
 
 # =========================
 # 4. INDEXAÇÃO VETORIAL
 # =========================
 
-dimension = embeddings.shape[1]
-index = faiss.IndexFlatL2(dimension)
-index.add(np.array(embeddings))
-
-animated_print(f"Total of vetors index: { index.ntotal}")
+def index_vetor(embeddings):
+    dimension = embeddings.shape[1]
+    index = faiss.IndexFlatL2(dimension)
+    index.add(np.array(embeddings))
+    
+    animated_print(f"Total of vetors index: { index.ntotal}")
+    return index
 
 # =========================
 # 5. BUSCA SEMÂNTICA
 # =========================
 
-query = "Pix funciona á noite?"
-query_embeddings = model.encode([query])
+def question_request(query):
+    animated_print(f"Question: {query}")
+    
+    embeddings =  create_embeddings(chunks)
+    index = index_vetor(embeddings)
+    query_embeddings = model.encode([query])
 
-k = 2 ## número de resultados
+    k = 3 ## número de resultados
 
-distances, indices = index.search(np.array(query_embeddings), k)
+    distances, indices = index.search(np.array(query_embeddings), k)
 
-animated_print("Results of search")
-animated_print(f"Question: {query}")
-animated_print("Chunks more relevants")
+    animated_print("Results of search")
+    for i, d in zip(indices[0], distances[0]):
+        animated_print(f" Index: {i}, Distances: {d}, Result: {chunks[i]}")
+    
 
-
-for idx in indices[0]:
-    animated_print(f"- {chunks[idx]}")
-
+chunk_text(document)
+question_request("Pix funciona á noite?")
