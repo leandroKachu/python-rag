@@ -6,7 +6,7 @@ Create Alias on bashrc to start/stop venv
 
 * Enter Bashrc
 ```bash
-vim ~/.bashrc
+vim ~/.bashrc "linux environment"
 ```
 * Set this alias
 ```bash
