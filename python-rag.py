@@ -5,14 +5,13 @@ import sys
 from sentence_transformers import SentenceTransformer
 
 
-
-
 document= """
 O Pix é um sistema de pagamentos instantâneos criado pelo Banco Central do Brasil.
 Ele permite transferências 24 horas por dia, 7 dias por semana.
 As transações são concluídas em poucos segundos.
 O Pix pode ser usado por pessoas físicas e empresas.
 """
+
 def animated_print(msg, width=60, delay=0.01):
     for i  in range(1, width + 1):
         sys.stdout.write("\r" + "="* i)
@@ -76,9 +75,9 @@ k = 2 ## número de resultados
 
 distances, indices = index.search(np.array(query_embeddings), k)
 
-animated_print("Resultado da Busca")
-animated_print(f"Pergunta: {query}")
-animated_print("Chunks mais relevantes")
+animated_print("Results of search")
+animated_print(f"Question: {query}")
+animated_print("Chunks more relevants")
 
 
 for idx in indices[0]:
