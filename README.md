@@ -30,4 +30,17 @@ stop-venv() {
 * lib dependency
 ```bash
 pip install faiss-cpu numpy sentence-transformers
+pip install -U langchain langchain-google-genai google-generativeai
+pip install scikit-learn 
+pip install pdfplumber
+pip install -U -q "google-genai"
+pip install python-multipart
+pip insall dotenv
+
+
+pip install -U \
+  langchain-core \
+  langchain-community \
+  langchain-google-genai
+
 

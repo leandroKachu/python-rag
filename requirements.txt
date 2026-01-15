@@ -1,0 +1,11 @@
+fastapi
+uvicorn
+faiss-cpu
+sentence-transformers
+pdfplumber
+numpy
+scikit-learn
+google-genai==1.57.0
+uvicorn[standard]
+python-multipart
+
