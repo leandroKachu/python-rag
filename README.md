@@ -1,3 +1,5 @@
+warning: it was a test rag, if you try run /ask without put some datas at vetor database, it should return 500 LOL 
+
 Create virtual environment inside the folder:
 ```bash
 python3 -m venv .venv
